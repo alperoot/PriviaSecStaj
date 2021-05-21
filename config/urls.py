@@ -23,4 +23,5 @@ urlpatterns = [
     path('profile/', TemplateView.as_view(template_name='profile.html'), name='profile'),
     path('hesaplar/', include('django.contrib.auth.urls')),
     path('hesaplar/', include('hesaplar.urls')),
+    path('', include('Posts.urls'), name='basliklar'),
 ]

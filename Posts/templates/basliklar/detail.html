@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>biraz şüp, ys</title>
+</head>
+<body>
+<h2>{{ post.post_title }} </h2>
+<h2>Gönderen: {{ post.original_poster }} </h2>
+<h2>{{ post.post_icerik }} </h2>
+<h3>Gönderim tarihi: {{ post.date_posted }} </h3>
+<p></p>
+<p></p>
+
+{% for comment in question.comment_set.all %}
+    <h3>Yorum yazarı: {{ comment.original_commenter }} </h3>
+    <h3>Yorum yazarı: {{ comment.comment_icerik }} </h3>
+    <p></p>
+    <p></p>
+{% endfor %}
+</body>
+</html>
