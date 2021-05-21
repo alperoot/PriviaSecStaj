@@ -1,0 +1,17 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <p>Kullanıcı ismi: {{ user.username }}</p>
+  <p>Kullanıcı e-posta adresi: {{ user.email }}</p>
+  <p>Son giriş tarihi: {{ user.last_login }}</p>
+  <p><a href="{% url 'profile' %}">Profili göster</a></p>
+  <p><a href="{% url 'logout' %}">Çıkış yap</a></p>
+{% else %}
+  <p>Bu sayfayı görmek için giriş yapmalısınız</p>
+  <a href="{% url 'login' %}">Giriş yap</a>
+{% endif %}
+{% endblock %}
