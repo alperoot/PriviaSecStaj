@@ -6,17 +6,32 @@
 </head>
 <body>
 <h2>{{ post.post_title }} </h2>
-<h2>Gönderen: {{ post.original_poster }} </h2>
+<h2>Gönderen: <a href="">{{ post.original_poster }}</a> </h2>
 <h2>{{ post.post_icerik }} </h2>
 <h3>Gönderim tarihi: {{ post.date_posted }} </h3>
+{% if post.original_poster == user.username or user.is_staff %}
+<a href="">Gönderiyi Sil</a> <a href="">Gönderiyi Düzenle</a>
+    {%if post.comments_status == 1 %}
+    <a href="">Yorumları Kapat</a>
+    {%elif post.comments_status == 0 %}
+    <a href="">Yorumları Aç</a>
+    {% endif %}
+{% endif %}
 <p></p>
 <p></p>
 
-{% for comment in question.comment_set.all %}
-    <h3>Yorum yazarı: {{ comment.original_commenter }} </h3>
+{% for comment in post.comment_set.all %}
+<h3>Yorum yazarı: <a href="">{{ comment.original_commenter }}</a> </h3>
     <h3>Yorum yazarı: {{ comment.comment_icerik }} </h3>
     <p></p>
     <p></p>
 {% endfor %}
+
+{% if user.is_authenticated %}
+<tr><th>Yorum:</th><td><input type="text" name="comment" required></td></tr>
+<button type="submit">Yorum yap</button>
+
+{% endif %}
+
 </body>
 </html>
