@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en"> 
 <head>
-    <title>Bootstrap 4 Blog Template For Developers</title>
+    <title>biraz şüp, ys</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -37,13 +37,22 @@
 
 			<div id="navigation" class="collapse navbar-collapse flex-column" >
 				<div class="profile-section pt-3 pt-lg-0">
-				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'images/profile.png' %}" alt="image" >
+					{% if user.is_authenticated %}
+				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'images/profile2.png' %}" alt="image" >
+					{% else %}
+					<img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'images/profile.png' %}" alt="image" >
+					{% endif %}
 					
 					<div class="bio mb-3">
-						Kullanıcı durum mesajı buraya<br><a href="profile.html">Gönderi listesi linki</a></div><!--//bio-->
+						{% if user.is_authenticated %}
+						Nothing for now :/<br><a href="profile.html">Gönderi listesi linki</a></div><!--//bio-->
+						{% else %}
+						Gönderi oluşturmak için lütfen giriş yapınız. Hesabınız yok mu?<br><a href="{% url 'kayit' %}">Kayıt olun</a></div>
+						{% endif %}
 
-			        <hr> 
+
 				</div><!--//profile-section-->
+				{% if user.is_authenticated %}
 				
 				<ul class="navbar-nav flex-column text-left">
 					<li class="nav-item active">
@@ -53,10 +62,20 @@
 					    <a class="nav-link" href="about.html"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
 					</li>
 				</ul>
-				
+
+
 				<div class="my-2 my-md-3">
-				    <a class="btn btn-primary" href="https://themes.3rdwavemedia.com/" target="_blank">Get in Touch</a>
+				    <a class="btn btn-primary" href="/gonderi/" >Yeni Gönderi</a>
 				</div>
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="{% url 'logout' %}" >Çıkış</a>
+				</div>
+				{% else %}
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="{% url 'login' %}" >Giriş</a>
+
+				</div>
+				{% endif %}
 			</div>
 		</nav>
     </header>
@@ -83,19 +102,22 @@
 					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{% static 'images/blog/blog-post-thumb-1.jpg' %}" alt="image">
 					    <div class="media-body">
 						    <h3 class="title mb-1"><a href="blog-post.html">{{ post.post_title }}</a></h3>
-						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="comment"><a href="#">{{ comment_set.size }} comments</a></span></div>
-						    <div class="intro">{{ post.post_icerik|truncatechars:40 }}</div>
+						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ comment_set.size }} yorum</a></span></div>
+						    <div class="intro">{{ post.post_icerik|truncatechars:50 }}</div>
 						    <a class="more-link" href="/basliklar/{{ post.id }}/">Daha fazla &rarr;</a>
 					    </div><!--//media-body-->
 				    </div><!--//media-->
 			    </div><!--//item-->
 				{% endfor %}
 
-			    
+			    <!--
+
 			    <nav class="blog-nav nav nav-justified my-5">
 				  <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
 				  <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
 				</nav>
+
+				-->
 				
 		    </div>
 	    </section>

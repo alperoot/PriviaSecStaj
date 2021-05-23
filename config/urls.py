@@ -16,12 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from Posts import views
 
 urlpatterns = [
     path('yonetim/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('', views.index, name='home'),
     path('profile/', TemplateView.as_view(template_name='profile.html'), name='profile'),
     path('hesaplar/', include('django.contrib.auth.urls')),
     path('hesaplar/', include('hesaplar.urls')),
+    # path('basliklar/', TemplateView.as_view(template_name=views.index), name='index')
     path('', include('Posts.urls'), name='basliklar'),
 ]

@@ -1,0 +1,18 @@
+<head>
+  <title>Create a Post </title>
+</head>
+
+<body>
+  {% if user.is_authenticated %}
+  <h1>Create a Post </h1>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Post"/>
+   </form>
+  {% else %}
+  <h1>Bunu yapmak için giriş yapmış olmalısınız.</h1>
+  {% endif %}
+</body>
+
+</html>
