@@ -1,5 +1,6 @@
 from django import forms
 from .models import Post, Comment
+from django.contrib.auth.forms import User
 
 class PostForm(forms.ModelForm):
     class Meta(object):
@@ -12,3 +13,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ("comment_icerik", "original_commenter", "date_commented", "post")
         widgets = {'original_commenter' : forms.HiddenInput(), 'date_commented' : forms.HiddenInput(), 'post' : forms.HiddenInput()}
+
+class UserForm(forms.ModelForm):
+    class Meta(object):
+        model = User

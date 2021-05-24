@@ -1,9 +1,12 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect, render
 from .models import Post, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, UserForm
+from django.views.generic.edit import UpdateView
+from django.urls import reverse_lazy
 import datetime
 
 
@@ -48,11 +51,24 @@ def publish_comment(request, post_id):
                 instance.post = post
                 instance.date_commented = datetime.datetime.now()
                 post.comment_added()
+                post.save()
                 instance.save()
                 return redirect("/basliklar/" + str(post_id))
     else:
         form = CommentForm()
     return render(request, "basliklar/detail.html", {"form" : form, "post" : post})
+
+def update_status(request):
+    form = UserForm(data=request.POST, instance=request.user)
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            return redirect("/basliklar/")
+    else:
+        form = CommentForm()
+    return render(request, "basliklar/about.html", {"form": form})
 
 
 def index(request):
