@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hesaplar',
     'Posts',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

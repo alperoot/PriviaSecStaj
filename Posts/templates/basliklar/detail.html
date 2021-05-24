@@ -1,37 +1,203 @@
 <!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>biraz şüp, ys</title>
+    <title>biraz şüp, ys</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blog Template">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- FontAwesome JS-->
+    <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+    <!-- Theme CSS -->
+    <link id="theme-style" rel="stylesheet" href="{% static 'css/theme-1.css' %}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+
 </head>
+
 <body>
-<h2>{{ post.post_title }} </h2>
-<h2>Gönderen: <a href="">{{ post.original_poster }}</a> </h2>
-<h2>{{ post.post_icerik }} </h2>
-<h3>Gönderim tarihi: {{ post.date_posted }} </h3>
-{% if post.original_poster == user.username or user.is_staff %}
-<a href="">Gönderiyi Sil</a> <a href="">Gönderiyi Düzenle</a>
-    {%if post.comments_status == 1 %}
-    <a href="">Yorumları Kapat</a>
-    {%elif post.comments_status == 0 %}
-    <a href="">Yorumları Aç</a>
-    {% endif %}
-{% endif %}
-<p></p>
-<p></p>
 
-{% for comment in post.comment_set.all %}
-<h3>Yorum yazarı: <a href="">{{ comment.original_commenter }}</a> </h3>
-    <h3>Yorum yazarı: {{ comment.comment_icerik }} </h3>
-    <p></p>
-    <p></p>
-{% endfor %}
+    <header class="header text-center">
+		{% if user.is_authenticated %}
+	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">{{ user.username }}</a></h1>
+		{% else %}
+		<h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">Guest</a></h1>
+		{% endif %}
 
-{% if user.is_authenticated %}
-<tr><th>Yorum:</th><td><input type="text" name="comment" required></td></tr>
-<button type="submit">Yorum yap</button>
+	    <nav class="navbar navbar-expand-lg navbar-dark" >
 
-{% endif %}
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div id="navigation" class="collapse navbar-collapse flex-column" >
+				<div class="profile-section pt-3 pt-lg-0">
+					{% if user.is_authenticated %}
+				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'images/profile2.png' %}" alt="image" >
+					{% else %}
+					<img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'images/profile.png' %}" alt="image" >
+					{% endif %}
+
+					<div class="bio mb-3">
+						{% if user.is_authenticated %}
+						Nothing for now :/<br><a href="profile.html">Gönderi listesi linki</a></div><!--//bio-->
+						{% else %}
+						Gönderi oluşturmak için lütfen giriş yapınız. Hesabınız yok mu?<br><a href="{% url 'kayit' %}">Kayıt olun</a></div>
+						{% endif %}
+
+
+				</div><!--//profile-section-->
+				{% if user.is_authenticated %}
+
+				<ul class="navbar-nav flex-column text-left">
+					<li class="nav-item active">
+					    <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa<span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" href="about.html"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
+					</li>
+				</ul>
+
+
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="/gonderi/" >Yeni Gönderi</a>
+				</div>
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="{% url 'logout' %}" >Çıkış</a>
+				</div>
+				{% else %}
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="{% url 'login' %}" >Giriş</a>
+
+				</div>
+				{% endif %}
+			</div>
+		</nav>
+    </header>
+
+    <div class="main-wrapper">
+
+	    <article class="about-section py-5">
+		    <div class="container">
+			    <h2 class="title mb-3">{{ post.post_title }}</h2>
+				<div class="meta mb-3"><span class="date">Gönderi tarihi: {{ post.date_posted }}</a></span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum</a></span></div>
+
+				<p>{{ post.post_icerik|linebreaks }}</p>
+				{% if post.original_poster == user.username or user.is_staff %}
+				<a href="">Gönderiyi Sil</a> <a href="">Gönderiyi Düzenle</a>
+					{%if post.comments_status == 1 %}
+					<a href="">Yorumları Kapat</a>
+					{%elif post.comments_status == 0 %}
+					<a href="">Yorumları Aç</a>
+					{% endif %}
+				{% endif %}<br><br>
+				<h2>Yorumlar</h2>
+				{% if user.is_authenticated %}
+				<!--
+				<br><tr><th>Yorum:</th><td><input type="text" name="comment" required></td></tr>
+				<button type="submit">Yorum yap</button>
+				-->
+
+				<form method="post" novalidate>
+				  {% csrf_token %}
+
+				  {% for hidden_field in form.hidden_fields %}
+					{{ hidden_field }}
+				  {% endfor %}
+
+				  {% if form.non_field_errors %}
+					<div class="alert alert-danger" role="alert">
+					  {% for error in form.non_field_errors %}
+						{{ error }}
+					  {% endfor %}
+					</div>
+				  {% endif %}
+
+				  {% for field in form.visible_fields %}
+					<div class="form-group">
+					  {{ field.label_tag }}
+
+					  {% if form.is_bound %}
+						{% if field.errors %}
+						  {% render_field field class="form-control is-invalid" %}
+						  {% for error in field.errors %}
+							<div class="invalid-feedback">
+							  {{ error }}
+							</div>
+						  {% endfor %}
+						{% else %}
+						  {% render_field field class="form-control is-valid" %}
+						{% endif %}
+					  {% else %}
+						{% render_field field class="form-control" %}
+					  {% endif %}
+
+					  {% if field.help_text %}
+						<small class="form-text text-muted">{{ field.help_text }}</small>
+					  {% endif %}
+					</div>
+				  {% endfor %}
+
+				  <button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+				{% endif %}
+		    </div>
+	    </article><!--//about-section-->
+
+		{% for comment in post.comment_set.all %}
+		<div class="container">
+			    <div class="item mb-5">
+				    <div class="media">
+					    <div class="media-body">
+						    <h4 class="title mb-1"><a href="blog-post.html"><a href="">{{ comment.original_commenter }}</a></a></h4>
+						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ comment.date_commented }}</span></div>
+						    <div class="intro">{{ comment.comment_icerik }}</div>
+					    </div><!--//media-body-->
+				    </div><!--//media-->
+			    </div><!--//item-->
+			</div>
+		{% endfor %}
+
+	    <section class="cta-section theme-bg-light py-5">
+		    <div class="container text-center">
+			    <h2 class="heading">Newsletter</h2>
+			    <div class="intro">Welcome to my blog. Subscribe and get my latest blog post in your inbox.</div>
+			    <form class="signup-form form-inline justify-content-center pt-3">
+                    <div class="form-group">
+                        <label class="sr-only" for="semail">Your email</label>
+                        <input type="email" id="semail" name="semail1" class="form-control mr-md-1 semail" placeholder="Enter email">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+		    </div><!--//container-->
+	    </section>
+
+	    <footer class="footer text-center py-2 theme-bg-dark">
+
+	        <!--/* This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. Thank you for your support. :) If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com */-->
+            <small class="copyright">Designed with <i class="fas fa-heart" style="color: #fb866a;"></i> by <a href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developers</small>
+
+	    </footer>
+
+    </div><!--//main-wrapper-->
+
+    <!-- Javascript -->
+    <script src="{% static 'plugins/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'plugins/popper.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!-- Style Switcher (REMOVE ON YOUR PRODUCTION SITE) -->
+    <script src="{% static 'js/demo/style-switcher.js' %}"></script>
+
 
 </body>
 </html>
+

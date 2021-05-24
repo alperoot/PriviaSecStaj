@@ -102,7 +102,7 @@
 					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{% static 'images/blog/blog-post-thumb-1.jpg' %}" alt="image">
 					    <div class="media-body">
 						    <h3 class="title mb-1"><a href="blog-post.html">{{ post.post_title }}</a></h3>
-						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ comment_set.size }} yorum</a></span></div>
+						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum</a></span></div>
 						    <div class="intro">{{ post.post_icerik|truncatechars:50 }}</div>
 						    <a class="more-link" href="/basliklar/{{ post.id }}/">Daha fazla &rarr;</a>
 					    </div><!--//media-body-->

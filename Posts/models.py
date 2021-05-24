@@ -14,10 +14,10 @@ class Post(models.Model):
         return self.post_icerik
 
 class Comment(models.Model):
-    comment_icerik = models.TextField()
-    date_posted = models.DateTimeField('yorum tarihi')
-    original_commenter = models.CharField(max_length=200)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, default='')
+    comment_icerik = models.TextField(verbose_name='Yorum')
+    date_commented = models.DateTimeField('yorum tarihi', default=datetime.datetime.now())
+    original_commenter = models.CharField(max_length=200, default='anonymous')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, default=1)
     def __str__(self):
         return self.comment_icerik
 
