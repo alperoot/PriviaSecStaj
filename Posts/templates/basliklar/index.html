@@ -45,7 +45,7 @@
 					
 					<div class="bio mb-3">
 						{% if user.is_authenticated %}
-						Nothing for now :/<br><a href="profile.html">Gönderi listesi linki</a></div><!--//bio-->
+						{{ user.last_name }}<br><a href="profile.html">Gönderi listesi linki</a></div><!--//bio-->
 						{% else %}
 						Gönderi oluşturmak için lütfen giriş yapınız. Hesabınız yok mu?<br><a href="{% url 'kayit' %}">Kayıt olun</a></div>
 						{% endif %}

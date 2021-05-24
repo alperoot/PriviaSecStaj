@@ -12,6 +12,23 @@ class Post(models.Model):
     comments_number = models.IntegerField(default=0)
     def __str__(self):
         return self.post_icerik
+    def comment_added(self):
+        if self.comments_status == 1:
+            self.comments_number = self.comments_number + 1
+        else:
+            return 0
+    def lock_comments(self):
+        if self.comments_status == 1:
+            self.comments_status = 0
+            return 1
+        else:
+            return 0
+    def unlock_comments(self):
+        if self.comments_status == 0:
+            self.comments_status == 1
+            return 1
+        else:
+            return 0
 
 class Comment(models.Model):
     comment_icerik = models.TextField(verbose_name='Yorum')

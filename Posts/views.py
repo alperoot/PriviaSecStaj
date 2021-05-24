@@ -4,6 +4,7 @@ from django.template import loader
 from django.shortcuts import redirect, render
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
+import datetime
 
 
 # Create your views here.
@@ -21,6 +22,7 @@ def publish_post(request):
         if form.is_valid():
             instance = form.save(commit=False)
             instance.original_poster = request.user.username
+            instance.date_posted = datetime.datetime.now()
             instance.save()
             # read the doc for `redirect` and change the destination to
             # something that makes sense for your app.
@@ -44,8 +46,9 @@ def publish_comment(request, post_id):
                 instance = form.save(commit=False)
                 instance.original_commenter = request.user.username
                 instance.post = post
+                instance.date_commented = datetime.datetime.now()
+                post.comment_added()
                 instance.save()
-                post.comments_number = post.comments_number + 1
                 return redirect("/basliklar/" + str(post_id))
     else:
         form = CommentForm()
