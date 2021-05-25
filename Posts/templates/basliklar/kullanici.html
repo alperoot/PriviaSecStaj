@@ -54,15 +54,15 @@
 
 				</div><!--//profile-section-->
 				<ul class="navbar-nav flex-column text-left">
-					<li class="nav-item active">
-					    <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa<span class="sr-only">(current)</span></a>
+					<li class="nav-item">
+					    <a class="nav-link" href="/"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa<span class="sr-only">(current)</span></a>
 					</li>
-
 				{% if user.is_authenticated %}
-				<li class="nav-item">
-					<a class="nav-link" href="/profil"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
-				</li>
+					<li class="nav-item active">
+					    <a class="nav-link" href="/profil/"><i class="fas fa-user fa-fw mr-2"></i>Profil<span class="sr-only">(current)</span></a>
+					</li>
 				</ul>
+
 
 				<div class="my-2 my-md-3">
 				    <a class="btn btn-primary" href="{% url 'gonderi' %}" >Yeni Gönderi</a>
@@ -71,7 +71,6 @@
 				    <a class="btn btn-primary" href="{% url 'logout' %}" >Çıkış</a>
 				</div>
 				{% else %}
-				</ul>
 				<div class="my-2 my-md-3">
 				    <a class="btn btn-primary" href="{% url 'login' %}" >Giriş</a>
 
@@ -85,105 +84,46 @@
 
 	    <article class="about-section py-5">
 		    <div class="container">
-			    <h2 class="title mb-3">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</h2>
-				<div class="meta mb-3"><span class="date">Gönderi tarihi: {{ post.date_posted }}</a></span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum {% if post.comments_status == 0 %}(kilitli){% endif %}</a></span></div>
-
-				<p>{{ post.post_icerik|linebreaks }}</p>
-				{% if post.original_poster == user.username or user.is_staff %}
-				<form action="{% url 'delete' post.id %}">
-					<input type="submit" value="Gönderiyi Sil" />
-				</form>
-				<form action="#">
-					<input type="submit" value="Gönderiyi Düzenle" />
-				</form>
-					{% if post.comments_status == 1 %}
-					<form action="" method="post">
-						{% csrf_token %}
-						{{ toggleform.as_p }}
-						<button type="submit" value="preview" name="togglethread">Yorumları Kapat</button>
-					</form>
-					{% elif post.comments_status == 0 %}
-					<form action="" method="post">
-						{% csrf_token %}
-						{{ toggleform.as_p }}
-						<button type="submit" value="preview" name="togglethread">Yorumları Aç</button>
-					</form>
-					{% endif %}
-				{% endif %}<br><br>
-				<h2>Yorumlar</h2>
-				{% if user.is_authenticated and post.comments_status == 1 %}
+				<h2 class="title mb-3">{{ kullanici.username }}</h2>
 				<!--
 				<br><tr><th>Yorum:</th><td><input type="text" name="comment" required></td></tr>
 				<button type="submit">Yorum yap</button>
 				-->
+				 <figure><img class="img-fluid" src="{% static 'images/profile2.png' %}" alt="image"></figure>
+				Durum mesajı: {{ kullanici.last_name }}<br><br>
 
-				<form method="post" novalidate>
-				  {% csrf_token %}
-
-				  {% for hidden_field in form.hidden_fields %}
-					{{ hidden_field }}
-				  {% endfor %}
-
-				  {% if form.non_field_errors %}
-					<div class="alert alert-danger" role="alert">
-					  {% for error in form.non_field_errors %}
-						{{ error }}
-					  {% endfor %}
-					</div>
-				  {% endif %}
-
-				  {% for field in form.visible_fields %}
-					<div class="form-group">
-					  {{ field.label_tag }}
-
-					  {% if form.is_bound %}
-						{% if field.errors %}
-						  {% render_field field class="form-control is-invalid" %}
-						  {% for error in field.errors %}
-							<div class="invalid-feedback">
-							  {{ error }}
-							</div>
-						  {% endfor %}
-						{% else %}
-						  {% render_field field class="form-control is-valid" %}
-						{% endif %}
-					  {% else %}
-						{% render_field field class="form-control" %}
-					  {% endif %}
-
-					  {% if field.help_text %}
-						<small class="form-text text-muted">{{ field.help_text }}</small>
-					  {% endif %}
-					</div>
-				  {% endfor %}
-
-				  <button type="submit" class="btn btn-primary" name="publishcomment">Gönder</button>
-				</form>
-				{% endif %}
-		    </div>
-	    </article><!--//about-section-->
-
-		{% for comment in post.comment_set.all reversed %}
-		<div class="container">
-			    <div class="item mb-5">
+				<h2 class="title mb-3">{{ kullanici.username }} kullanıcısının gönderileri</h2>
+				<section class="blog-list px-3 py-5 p-md-5">
+		    <div class="container">
+				{% for post in latest_post_list %}
+				{% if post.original_poster == kullanici.username %}
+					<div class="item mb-5">
 				    <div class="media">
+					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{% static 'images/blog/blog-post-thumb-1.jpg' %}" alt="image">
 					    <div class="media-body">
-							{% if comment.original_commenter == user.username %}
-							<h4 class="title mb-1"><a href="blog-post.html"><a href="/profil">{{ comment.original_commenter }}</a></a></h4>
-							{% else %}
-						    <h4 class="title mb-1"><a href="blog-post.html"><a href="{% url 'show_profile' comment.id %}">{{ comment.original_commenter }}</a></a></h4>
-							{% endif %}
-							<div class="meta mb-1"><span class="date">{{ comment.get_status }}</span></div>
-							<div class="meta mb-1"><span class="date">Yorum tarihi: {{ comment.date_commented }}</span></div>
-						    <div class="intro">{{ comment.comment_icerik|linebreaks }}</div>
-							{% if post.original_poster == user.username or user.is_staff %}
-							<a href="{% url 'delete_comment' comment.id %}">Yorumu Sil</a>
-							{% endif %}
+						    <h3 class="title mb-1"><a href="blog-post.html">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</a></h3>
+						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum {% if post.comments_status == 0 %}(kilitli){% endif %}</a></span></div>
+						    <div class="intro">{{ post.post_icerik|truncatechars:50 }}</div>
+						    <a class="more-link" href="/basliklar/{{ post.id }}/">Daha fazla &rarr;</a>
 					    </div><!--//media-body-->
 				    </div><!--//media-->
 			    </div><!--//item-->
-			</div>
-		{% endfor %}
+				{% endif %}
+				{% endfor %}
+
+			    <!--
+
+			    <nav class="blog-nav nav nav-justified my-5">
+				  <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+				  <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+				</nav>
+
+				-->
+
+		    </div>
+	    </section>
+		    </div>
+	    </article><!--//about-section-->
 
 	    <footer class="footer text-center py-2 theme-bg-dark">
 

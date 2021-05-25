@@ -54,12 +54,12 @@
 
 				</div><!--//profile-section-->
 				<ul class="navbar-nav flex-column text-left">
-					<li class="nav-item active">
+					<li class="nav-item">
 					    <a class="nav-link" href="/"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa<span class="sr-only">(current)</span></a>
 					</li>
 				{% if user.is_authenticated %}
-					<li class="nav-item">
-					    <a class="nav-link" href="/profil/"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
+					<li class="nav-item active">
+					    <a class="nav-link" href="/profil/"><i class="fas fa-user fa-fw mr-2"></i>Profil<span class="sr-only">(current)</span></a>
 					</li>
 				</ul>
 
@@ -91,39 +91,7 @@
 				<button type="submit">Yorum yap</button>
 				-->
 				 <figure><img class="img-fluid" src="{% static 'images/profile2.png' %}" alt="image"></figure>
-				<div class="meta mb-3"><span class="comment"> {{ user.last_name }} </span></div>
-
-				<h2 class="title mb-3">{{ user.username }} kullanıcısının gönderileri</h2>
-				<section class="blog-list px-3 py-5 p-md-5">
-		    <div class="container">
-				{% for post in latest_post_list %}
-				{% if post.original_poster == user.username %}
-					<div class="item mb-5">
-				    <div class="media">
-					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{% static 'images/blog/blog-post-thumb-1.jpg' %}" alt="image">
-					    <div class="media-body">
-						    <h3 class="title mb-1"><a href="blog-post.html">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</a></h3>
-						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum {% if post.comments_status == 0 %}(kilitli){% endif %}</a></span></div>
-						    <div class="intro">{{ post.post_icerik|truncatechars:50 }}</div>
-						    <a class="more-link" href="/basliklar/{{ post.id }}/">Daha fazla &rarr;</a>
-					    </div><!--//media-body-->
-				    </div><!--//media-->
-			    </div><!--//item-->
-				{% endif %}
-				{% endfor %}
-
-			    <!--
-
-			    <nav class="blog-nav nav nav-justified my-5">
-				  <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
-				  <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
-				</nav>
-
-				-->
-
-		    </div>
-	    </section>
-
+				Durum mesajı: {{ user.last_name }}<br><br>
 				<form method="post" novalidate>
 				  {% csrf_token %}
 
@@ -166,23 +134,41 @@
 
 				  <button type="submit" class="btn btn-primary">Güncelle</button>
 				</form>
-				{% endif %}
-		    </div>
-	    </article><!--//about-section-->
+				{% endif %} <br>
 
-		{% for comment in post.comment_set.all %}
-		<div class="container">
-			    <div class="item mb-5">
+				<h2 class="title mb-3">{{ user.username }} kullanıcısının gönderileri</h2>
+				<section class="blog-list px-3 py-5 p-md-5">
+		    <div class="container">
+				{% for post in latest_post_list %}
+				{% if post.original_poster == user.username %}
+					<div class="item mb-5">
 				    <div class="media">
+					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{% static 'images/blog/blog-post-thumb-1.jpg' %}" alt="image">
 					    <div class="media-body">
-						    <h4 class="title mb-1"><a href="blog-post.html"><a href="">{{ comment.original_commenter }}</a></a></h4>
-						    <div class="meta mb-1"><span class="date">Yorum tarihi: {{ comment.date_commented }}</span></div>
-						    <div class="intro">{{ comment.comment_icerik|linebreaks }}</div>
+						    <h3 class="title mb-1"><a href="blog-post.html">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</a></h3>
+						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum {% if post.comments_status == 0 %}(kilitli){% endif %}</a></span></div>
+						    <div class="intro">{{ post.post_icerik|truncatechars:50 }}</div>
+						    <a class="more-link" href="/basliklar/{{ post.id }}/">Daha fazla &rarr;</a>
+							<div class="intro"><a href="{% url 'delete' post.id %}">Gönderiyi sil</a></div>
 					    </div><!--//media-body-->
 				    </div><!--//media-->
 			    </div><!--//item-->
-			</div>
-		{% endfor %}
+				{% endif %}
+				{% endfor %}
+
+			    <!--
+
+			    <nav class="blog-nav nav nav-justified my-5">
+				  <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+				  <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+				</nav>
+
+				-->
+
+		    </div>
+	    </section>
+		    </div>
+	    </article><!--//about-section-->
 
 	    <footer class="footer text-center py-2 theme-bg-dark">
 

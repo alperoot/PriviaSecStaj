@@ -67,6 +67,14 @@ def delete_post(request, post_id):
     post.delete()
     return redirect("/basliklar")
 
+def delete_comment(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    post = Post.objects.get(id=comment.post.id)
+    post.comments_number = post.comments_number - 1
+    post.save()
+    comment.delete()
+    return redirect("/basliklar/" + str(comment.post.id))
+
 def flush_comments(post_id):
     post = Post.objects.get(id=post_id)
     for comment in post.comment_set.all():
@@ -117,6 +125,13 @@ def update_status(request):
         form = UserForm()
     return render(request, "basliklar/about.html", {"form": form, 'latest_post_list': latest_post_list})
 
+def show_profile(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    ad = comment.original_commenter
+    user = User.objects.get(username=ad)
+    latest_post_list = Post.objects.order_by('-date_posted')
+    status = user.last_name
+    return render(request, "basliklar/kullanici.html", {'kullanici' : user, 'latest_post_list' : latest_post_list, 'status' : status})
 
 def index(request):
     latest_post_list = Post.objects.order_by('-date_posted')
