@@ -26,11 +26,12 @@
 
 
 <body>
+
 	<header class="header text-center">
 		{% if user.is_authenticated %}
-	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">{{ user.username }}</a></h1>
+	    <h1 class="blog-name pt-lg-4 mb-0"><a href="/">{{ user.username }}</a></h1>
 		{% else %}
-		<h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">Guest</a></h1>
+		<h1 class="blog-name pt-lg-4 mb-0"><a href="/">Guest</a></h1>
 		{% endif %}
 
 	    <nav class="navbar navbar-expand-lg navbar-dark" >
@@ -48,37 +49,51 @@
 					{% endif %}
 
 					<div class="bio mb-3">
+						{% if user.is_authenticated %}
+						{{ user.last_name }}<br></div><!--//bio-->
+						{% else %}
+						Gönderi oluşturmak için lütfen giriş yapınız. Hesabınız yok mu?<br><a href="{% url 'kayit' %}">Kayıt olun</a></div>
+						{% endif %}
+
 
 				</div><!--//profile-section-->
-				{% if user.is_authenticated %}
-
 				<ul class="navbar-nav flex-column text-left">
-					<li class="nav-item active">
-					    <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa<span class="sr-only">(current)</span></a>
-					</li>
 					<li class="nav-item">
-					    <a class="nav-link" href="about.html"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
+					    <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa</a>
 					</li>
+
+				{% if user.is_authenticated %}
+				<li class="nav-item">
+					<a class="nav-link" href="/profil"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
+				</li>
 				</ul>
 
-
 				<div class="my-2 my-md-3">
-				    <a class="btn btn-primary" href="/gonderi/" >Yeni Gönderi</a>
+				    <a class="btn btn-primary" href="{% url 'gonderi' %}" >Yeni Gönderi</a>
 				</div>
 				<div class="my-2 my-md-3">
 				    <a class="btn btn-primary" href="{% url 'logout' %}" >Çıkış</a>
 				</div>
 				{% else %}
+				</ul>
 				<div class="my-2 my-md-3">
 				    <a class="btn btn-primary" href="{% url 'login' %}" >Giriş</a>
 
 				</div>
 				{% endif %}
-				</div>
 			</div>
 		</nav>
     </header>
     <div class="main-wrapper">
+
+		{% if user.is_authenticated %}
+	    <section class="cta-section theme-bg-light py-5">
+		<div class="container text-center">
+			    <h2 class="heading">Zaten {{ user.username }} olarak giriş yapıldı.</h2>
+			    <div class="intro">Yeni bir hesap oluşturmak için çıkış yapıp bu sayfayı tekrar ziyaret edebilirsiniz.</div>
+		</div> </section>
+
+		{% else %}
 
 	    <article class="about-section py-5">
 			<div class="container">
@@ -126,6 +141,8 @@
 			  </form>
 			</div>
 	    </article><!--//about-section-->
+
+		{% endif %}
 
 	    <footer class="footer text-center py-2 theme-bg-dark">
 

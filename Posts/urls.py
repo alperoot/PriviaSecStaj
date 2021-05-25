@@ -18,5 +18,5 @@ urlpatterns = [
     path('flushcomments/<int:post_id>', views.flush_comments, name='flush_comments'),
     path('togglethread/', toggle_thread, name='togglethread'),
     path('deletecomment/<int:comment_id>',views.delete_comment,name='delete_comment'),
-    path('kulllanici/<int:comment_id>',views.show_profile, name='show_profile'),
+    path('kullanici/<int:comment_id>',views.show_profile, name='show_profile'),
 ]
