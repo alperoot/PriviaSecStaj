@@ -17,3 +17,11 @@ class CommentForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta(object):
         model = User
+        fields = ('last_name',)
+        labels = {'last_name' : "Durum:"}
+
+class ToggleForm(forms.ModelForm):
+    class Meta(object):
+        model = Post
+        fields = ('comments_status',)
+        widgets = {'comments_status' : forms.HiddenInput}

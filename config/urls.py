@@ -21,7 +21,6 @@ from Posts import views
 urlpatterns = [
     path('yonetim/', admin.site.urls),
     path('', views.index, name='home'),
-    path('profile/', TemplateView.as_view(template_name='profile.html'), name='profile'),
     path('hesaplar/', include('django.contrib.auth.urls')),
     path('hesaplar/', include('hesaplar.urls')),
     # path('basliklar/', TemplateView.as_view(template_name=views.index), name='index')

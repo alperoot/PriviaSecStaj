@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.forms import User
 import datetime
 
 # Create your models here.
@@ -17,26 +18,25 @@ class Post(models.Model):
             self.comments_number = self.comments_number + 1
         else:
             return 0
-    def lock_comments(self):
+    def toggle_comments(self):
         if self.comments_status == 1:
             self.comments_status = 0
             return 1
         else:
-            return 0
-    def unlock_comments(self):
-        if self.comments_status == 0:
-            self.comments_status == 1
-            return 1
-        else:
+            self.comments_status = 1
             return 0
 
 class Comment(models.Model):
-    comment_icerik = models.TextField(verbose_name='Yorum')
+    comment_icerik = models.TextField(verbose_name='Yorum', default='')
     date_commented = models.DateTimeField('yorum tarihi', default=datetime.datetime.now())
     original_commenter = models.CharField(max_length=200, default='anonymous')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, default=1)
     def __str__(self):
         return self.comment_icerik
+
+    def get_status(self):
+        user = User.objects.get(username=self.original_commenter)
+        return user.last_name
 
 class Status(models.Model):
     status_icerik = models.CharField(max_length=100, default="Yeni Üye")

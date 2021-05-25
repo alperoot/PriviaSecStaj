@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 from hesaplar.views import SignUpView
-from Posts.views import publish_post, publish_comment, update_status
+from Posts.views import publish_post, publish_comment, update_status, toggle_thread
 
 
 urlpatterns = [
@@ -13,5 +13,8 @@ urlpatterns = [
     path('kayit/', SignUpView.as_view(), name='kayit'),
     path('gonderi/', publish_post, name='gonderi'),
     path('basliklar/<int:post_id>/', publish_comment, name='yorum'),
-    path('profil/', update_status, name='profil')
+    path('profil/', update_status, name='profil'),
+    path('delete/<int:post_id>',views.delete_post,name='delete'),
+    path('flushcomments/<int:post_id>', views.flush_comments, name='flush_comments'),
+    path('togglethread/', toggle_thread, name='togglethread'),
 ]

@@ -9,9 +9,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Blog Template">
-    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
-    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="description" content="Privia blog">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
 
     <!-- FontAwesome JS-->
     <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
@@ -47,24 +46,23 @@
 
 					<div class="bio mb-3">
 						{% if user.is_authenticated %}
-						Nothing for now :/<br><a href="profile.html">Gönderi listesi linki</a></div><!--//bio-->
+						{{ user.last_name }}<br></div><!--//bio-->
 						{% else %}
 						Gönderi oluşturmak için lütfen giriş yapınız. Hesabınız yok mu?<br><a href="{% url 'kayit' %}">Kayıt olun</a></div>
 						{% endif %}
 
 
 				</div><!--//profile-section-->
-				{% if user.is_authenticated %}
-
 				<ul class="navbar-nav flex-column text-left">
 					<li class="nav-item active">
 					    <a class="nav-link" href="{% url 'index' %}"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa<span class="sr-only">(current)</span></a>
 					</li>
-					<li class="nav-item">
-					    <a class="nav-link" href="#"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
-					</li>
-				</ul>
 
+				{% if user.is_authenticated %}
+				<li class="nav-item">
+					<a class="nav-link" href="/profil"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
+				</li>
+				</ul>
 
 				<div class="my-2 my-md-3">
 				    <a class="btn btn-primary" href="{% url 'gonderi' %}" >Yeni Gönderi</a>
@@ -73,6 +71,7 @@
 				    <a class="btn btn-primary" href="{% url 'logout' %}" >Çıkış</a>
 				</div>
 				{% else %}
+				</ul>
 				<div class="my-2 my-md-3">
 				    <a class="btn btn-primary" href="{% url 'login' %}" >Giriş</a>
 
@@ -86,20 +85,33 @@
 
 	    <article class="about-section py-5">
 		    <div class="container">
-			    <h2 class="title mb-3">{{ post.post_title }}</h2>
-				<div class="meta mb-3"><span class="date">Gönderi tarihi: {{ post.date_posted }}</a></span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum</a></span></div>
+			    <h2 class="title mb-3">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</h2>
+				<div class="meta mb-3"><span class="date">Gönderi tarihi: {{ post.date_posted }}</a></span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum {% if post.comments_status == 0 %}(kilitli){% endif %}</a></span></div>
 
 				<p>{{ post.post_icerik|linebreaks }}</p>
 				{% if post.original_poster == user.username or user.is_staff %}
-				<a href="">Gönderiyi Sil</a> <a href="">Gönderiyi Düzenle</a>
-					{%if post.comments_status == 1 %}
-					<a href="">Yorumları Kapat</a>
-					{%elif post.comments_status == 0 %}
-					<a href="">Yorumları Aç</a>
+				<form action="{% url 'delete' post.id %}">
+					<input type="submit" value="Gönderiyi Sil" />
+				</form>
+				<form action="#">
+					<input type="submit" value="Gönderiyi Düzenle" />
+				</form>
+					{% if post.comments_status == 1 %}
+					<form action="" method="post">
+						{% csrf_token %}
+						{{ toggleform.as_p }}
+						<button type="submit" value="preview" name="togglethread">Yorumları Kapat</button>
+					</form>
+					{% elif post.comments_status == 0 %}
+					<form action="" method="post">
+						{% csrf_token %}
+						{{ toggleform.as_p }}
+						<button type="submit" value="preview" name="togglethread">Yorumları Aç</button>
+					</form>
 					{% endif %}
 				{% endif %}<br><br>
 				<h2>Yorumlar</h2>
-				{% if user.is_authenticated %}
+				{% if user.is_authenticated and post.comments_status == 1 %}
 				<!--
 				<br><tr><th>Yorum:</th><td><input type="text" name="comment" required></td></tr>
 				<button type="submit">Yorum yap</button>
@@ -145,19 +157,20 @@
 					</div>
 				  {% endfor %}
 
-				  <button type="submit" class="btn btn-primary">Submit</button>
+				  <button type="submit" class="btn btn-primary" name="publishcomment">Gönder</button>
 				</form>
 				{% endif %}
 		    </div>
 	    </article><!--//about-section-->
 
-		{% for comment in post.comment_set.all %}
+		{% for comment in post.comment_set.all reversed %}
 		<div class="container">
 			    <div class="item mb-5">
 				    <div class="media">
 					    <div class="media-body">
 						    <h4 class="title mb-1"><a href="blog-post.html"><a href="">{{ comment.original_commenter }}</a></a></h4>
-						    <div class="meta mb-1"><span class="date">Yorum tarihi: {{ comment.date_commented }}</span></div>
+							<div class="meta mb-1"><span class="date">{{ comment.get_status }}</span></div>
+							<div class="meta mb-1"><span class="date">Yorum tarihi: {{ comment.date_commented }}</span></div>
 						    <div class="intro">{{ comment.comment_icerik|linebreaks }}</div>
 					    </div><!--//media-body-->
 				    </div><!--//media-->

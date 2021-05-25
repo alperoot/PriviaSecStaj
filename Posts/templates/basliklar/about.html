@@ -1,5 +1,207 @@
-<form method="post">
-  {% csrf_token %}
-  {{ form }}
-  <input type="submit" />
-</form>
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="en">
+<head>
+    <title>biraz şüp, ys</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Privia blog">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
+    <!-- FontAwesome JS-->
+    <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+
+    <!-- Theme CSS -->
+    <link id="theme-style" rel="stylesheet" href="{% static 'css/theme-1.css' %}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+    <header class="header text-center">
+		{% if user.is_authenticated %}
+	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">{{ user.username }}</a></h1>
+		{% else %}
+		<h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">Guest</a></h1>
+		{% endif %}
+
+	    <nav class="navbar navbar-expand-lg navbar-dark" >
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div id="navigation" class="collapse navbar-collapse flex-column" >
+				<div class="profile-section pt-3 pt-lg-0">
+					{% if user.is_authenticated %}
+				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'images/profile2.png' %}" alt="image" >
+					{% else %}
+					<img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'images/profile.png' %}" alt="image" >
+					{% endif %}
+
+					<div class="bio mb-3">
+						{% if user.is_authenticated %}
+						{{ user.last_name }}<br></div><!--//bio-->
+						{% else %}
+						Gönderi oluşturmak için lütfen giriş yapınız. Hesabınız yok mu?<br><a href="{% url 'kayit' %}">Kayıt olun</a></div>
+						{% endif %}
+
+
+				</div><!--//profile-section-->
+				<ul class="navbar-nav flex-column text-left">
+					<li class="nav-item active">
+					    <a class="nav-link" href="/"><i class="fas fa-home fa-fw mr-2"></i>Ana Sayfa<span class="sr-only">(current)</span></a>
+					</li>
+				{% if user.is_authenticated %}
+					<li class="nav-item">
+					    <a class="nav-link" href="/profil/"><i class="fas fa-user fa-fw mr-2"></i>Profil</a>
+					</li>
+				</ul>
+
+
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="{% url 'gonderi' %}" >Yeni Gönderi</a>
+				</div>
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="{% url 'logout' %}" >Çıkış</a>
+				</div>
+				{% else %}
+				<div class="my-2 my-md-3">
+				    <a class="btn btn-primary" href="{% url 'login' %}" >Giriş</a>
+
+				</div>
+				{% endif %}
+			</div>
+		</nav>
+    </header>
+
+    <div class="main-wrapper">
+
+	    <article class="about-section py-5">
+		    <div class="container">
+			    {% if user.is_authenticated %}
+				<h2 class="title mb-3">{{ user.username }}</h2>
+				<!--
+				<br><tr><th>Yorum:</th><td><input type="text" name="comment" required></td></tr>
+				<button type="submit">Yorum yap</button>
+				-->
+				 <figure><img class="img-fluid" src="{% static 'images/profile2.png' %}" alt="image"></figure>
+				<div class="meta mb-3"><span class="comment"> {{ user.last_name }} </span></div>
+
+				<h2 class="title mb-3">{{ user.username }} kullanıcısının gönderileri</h2>
+				<section class="blog-list px-3 py-5 p-md-5">
+		    <div class="container">
+				{% for post in latest_post_list %}
+				{% if post.original_poster == user.username %}
+					<div class="item mb-5">
+				    <div class="media">
+					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{% static 'images/blog/blog-post-thumb-1.jpg' %}" alt="image">
+					    <div class="media-body">
+						    <h3 class="title mb-1"><a href="blog-post.html">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</a></h3>
+						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum {% if post.comments_status == 0 %}(kilitli){% endif %}</a></span></div>
+						    <div class="intro">{{ post.post_icerik|truncatechars:50 }}</div>
+						    <a class="more-link" href="/basliklar/{{ post.id }}/">Daha fazla &rarr;</a>
+					    </div><!--//media-body-->
+				    </div><!--//media-->
+			    </div><!--//item-->
+				{% endif %}
+				{% endfor %}
+
+			    <!--
+
+			    <nav class="blog-nav nav nav-justified my-5">
+				  <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+				  <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+				</nav>
+
+				-->
+
+		    </div>
+	    </section>
+
+				<form method="post" novalidate>
+				  {% csrf_token %}
+
+				  {% for hidden_field in form.hidden_fields %}
+					{{ hidden_field }}
+				  {% endfor %}
+
+				  {% if form.non_field_errors %}
+					<div class="alert alert-danger" role="alert">
+					  {% for error in form.non_field_errors %}
+						{{ error }}
+					  {% endfor %}
+					</div>
+				  {% endif %}
+
+				  {% for field in form.visible_fields %}
+					<div class="form-group">
+					  {{ field.label_tag }}
+
+					  {% if form.is_bound %}
+						{% if field.errors %}
+						  {% render_field field class="form-control is-invalid" %}
+						  {% for error in field.errors %}
+							<div class="invalid-feedback">
+							  {{ error }}
+							</div>
+						  {% endfor %}
+						{% else %}
+						  {% render_field field %}
+						{% endif %}
+					  {% else %}
+						{% render_field field %}
+					  {% endif %}
+
+					  {% if field.help_text %}
+						<small class="form-text text-muted">{{ field.help_text }}</small>
+					  {% endif %}
+					</div>
+				  {% endfor %}
+
+				  <button type="submit" class="btn btn-primary">Güncelle</button>
+				</form>
+				{% endif %}
+		    </div>
+	    </article><!--//about-section-->
+
+		{% for comment in post.comment_set.all %}
+		<div class="container">
+			    <div class="item mb-5">
+				    <div class="media">
+					    <div class="media-body">
+						    <h4 class="title mb-1"><a href="blog-post.html"><a href="">{{ comment.original_commenter }}</a></a></h4>
+						    <div class="meta mb-1"><span class="date">Yorum tarihi: {{ comment.date_commented }}</span></div>
+						    <div class="intro">{{ comment.comment_icerik|linebreaks }}</div>
+					    </div><!--//media-body-->
+				    </div><!--//media-->
+			    </div><!--//item-->
+			</div>
+		{% endfor %}
+
+	    <footer class="footer text-center py-2 theme-bg-dark">
+
+	        <!--/* This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. Thank you for your support. :) If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com */-->
+            <small class="copyright">Designed with <i class="fas fa-heart" style="color: #fb866a;"></i> by <a href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developers</small>
+
+	    </footer>
+
+    </div><!--//main-wrapper-->
+
+    <!-- Javascript -->
+    <script src="{% static 'plugins/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'plugins/popper.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!-- Style Switcher (REMOVE ON YOUR PRODUCTION SITE) -->
+    <script src="{% static 'js/demo/style-switcher.js' %}"></script>
+
+
+</body>
+</html>
+
