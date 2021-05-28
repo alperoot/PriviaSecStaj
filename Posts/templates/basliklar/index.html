@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en"> 
 <head>
-    <title>biraz şüp, ys</title>
+    <title>PriviaBlog</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -95,7 +95,7 @@
 				    <div class="media">
 					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{% static 'images/blog/blog-post-thumb-1.jpg' %}" alt="image">
 					    <div class="media-body">
-						    <h3 class="title mb-1"><a href="blog-post.html">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</a></h3>
+						    <h3 class="title mb-1"><a href="/basliklar/{{ post.id }}/">{{ post.post_title }}{% if post.comments_status == 0 %} 🔒 {% endif %}</a></h3>
 						    <div class="meta mb-1"><span class="date">Gönderi tarihi {{ post.date_posted }}</span><span class="time">Yazar: {{ post.original_poster }}</span><span class="comment"><a href="#">{{ post.comments_number }} yorum {% if post.comments_status == 0 %}(kilitli){% endif %}</a></span></div>
 						    <div class="intro">{{ post.post_icerik|truncatechars:50 }}</div>
 						    <a class="more-link" href="/basliklar/{{ post.id }}/">Daha fazla &rarr;</a>

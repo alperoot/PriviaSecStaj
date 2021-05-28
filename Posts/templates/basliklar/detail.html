@@ -176,7 +176,7 @@
 							<div class="meta mb-1"><span class="date">{{ comment.get_status }}</span></div>
 							<div class="meta mb-1"><span class="date">Yorum tarihi: {{ comment.date_commented }}</span></div>
 						    <div class="intro">{{ comment.comment_icerik|linebreaks }}</div>
-							{% if post.original_poster == user.username or user.is_staff %}
+							{% if comment.original_commenter == user.username or user.is_staff %}
 							<a href="{% url 'delete_comment' comment.id %}">Yorumu Sil</a>
 							{% endif %}
 					    </div><!--//media-body-->
