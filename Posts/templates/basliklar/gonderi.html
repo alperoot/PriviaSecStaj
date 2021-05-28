@@ -85,7 +85,7 @@
 		</nav>
     </header>
     <div class="main-wrapper">
-
+		{% if user.is_authenticated %}
 	    <article class="about-section py-5">
 			<div class="container">
 		    <form method="post" novalidate>
@@ -132,6 +132,15 @@
 			  </form>
 			</div>
 	    </article><!--//about-section-->
+		{% else %}
+		<section class="cta-section theme-bg-light py-5">
+		    <div class="container text-center">
+			    <h2 class="heading">Bunu yapmak için giriş yapmış olmalısınız.</h2>
+			    <div class="intro">Hesabınız yok mu? <a href="{% url 'kayit' %}">Kayıt olun</a></div>
+		    </div><!--//container-->
+	    </section>
+
+		{% endif %}
 
 	    <footer class="footer text-center py-2 theme-bg-dark">
 
