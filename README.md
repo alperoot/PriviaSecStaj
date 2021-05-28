@@ -3,7 +3,7 @@ PriviaSec Staj için forum yazılımı.
 
 ## Genel Bilgi
 - Bu yazılım Django versiyon 3.2.3 / Python 3.7 kullanarak yazılmıştır.
-- Projenin Heroku'ya deploylanmış haline [buradan](https://priviasec-blog.herokuapp.com/) ulaşılabilir.
+- Projenin Heroku'ya deploylanmış haline [buradan](https://priviasec-forums.herokuapp.com/) ulaşılabilir.
 
 ## Kurulum
 
