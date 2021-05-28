@@ -90,6 +90,7 @@ def publish_comment(request, post_id):
     if request.method == 'POST' and 'publishcomment' in request.POST:
         # eğer fonksiyonu çağıran butonun ismi "publishcomment" (yorumu gönder) ise bu kısım çalışır
         form = CommentForm(request.POST)
+        form2 = ToggleForm()
         if form.is_valid():
             if post.comments_status == 0:
                 # status 0 yorumlar kapalı demek
@@ -108,6 +109,7 @@ def publish_comment(request, post_id):
     elif request.method == 'POST' and 'togglethread' in request.POST:
         # eğer buton ismi "togglethread" ise bu kısım çalışır
         form2 = ToggleForm(request.POST)
+        form = CommentForm()
         if form2.is_valid():
             post = Post.objects.get(id=post_id)
             post.toggle_comments()
