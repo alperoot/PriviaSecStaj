@@ -26,3 +26,8 @@ class ToggleForm(forms.ModelForm):
         fields = ('comments_status',)
         widgets = {'comments_status' : forms.HiddenInput}
 
+class PostUpdateForm(forms.ModelForm):
+    class Meta(object):
+        model = Post
+        fields = ('post_icerik',)
+        labels = {'post_icerik' : "Gönderiyi düzenle:"}

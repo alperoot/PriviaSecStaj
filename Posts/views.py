@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect, render
 from .models import Post, Comment
-from .forms import PostForm, CommentForm, UserForm, ToggleForm
+from .forms import PostForm, CommentForm, UserForm, ToggleForm, PostUpdateForm
 import datetime
 
 
@@ -124,6 +124,18 @@ def update_status(request):
     else:
         form = UserForm()
     return render(request, "basliklar/about.html", {"form": form, 'latest_post_list': latest_post_list})
+
+def update_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    if request.method == 'POST':
+        form = PostUpdateForm(request.POST, initial={'post_icerik' : post.post_icerik}, instance=post)
+        if form.is_valid():
+            updated = form.save(commit=False)
+            updated.save()
+            return redirect("/basliklar/" + str(post_id))
+    else:
+        form = PostUpdateForm(initial={'post_icerik' : post.post_icerik})
+    return render(request, "basliklar/guncelle.html", {"form" : form})
 
 def show_profile(request, comment_id):
     comment = Comment.objects.get(id=comment_id)

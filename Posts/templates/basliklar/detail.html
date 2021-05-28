@@ -93,7 +93,7 @@
 				<form action="{% url 'delete' post.id %}">
 					<input type="submit" value="Gönderiyi Sil" />
 				</form>
-				<form action="#">
+				<form action="{% url 'update_post' post.id %}">
 					<input type="submit" value="Gönderiyi Düzenle" />
 				</form>
 					{% if post.comments_status == 1 %}
