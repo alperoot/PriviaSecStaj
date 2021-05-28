@@ -8,6 +8,7 @@ class PostForm(forms.ModelForm):
         fields = ("post_title", "post_icerik", "original_poster", "comments_status", "comments_number")
         widgets = {'original_poster': forms.HiddenInput(), 'comments_status': forms.HiddenInput(), 'comments_number': forms.HiddenInput()}
         # formda kullanıcının değiştirmesi istenmeyen fieldlar gizleniyor
+        labels = {'post_title' : "Başlık:", 'post_icerik' : "Gönderi içeriği:"}
 
 class CommentForm(forms.ModelForm):
     class Meta(object):
