@@ -27,6 +27,8 @@ Pipenv gereksinimleri kurulduktan sonra aşağıdaki komutu kullanarak sanal ort
 
 Bu komutu çalıştırdıktan sonra Django sunucunuz localhost (127.0.0.1:8000) konumunda aktif olmalıdır. Sunucunuzu bütün lokal ağa açmak için ```python manage.py runserver 0.0.0.0:8000``` komutu da kullanılabilir.
 
+Bir superuser (admin) oluşturmak için ```python manage.py createsuperuser``` komutunu kullanabilir, sonrasında da 127.0.0.1:8000/yonetim adresinden admin paneline ulaşabilirsiniz.
+
 ## TODO - Yapılabilecek geliştirmeler
 
 - AbstractUser extendlenerek yeni bir kullanıcı modeli oluşturmak
