@@ -1,1 +1,1 @@
-web: python priviasec-blog/manage.py runserver 0.0.0.0:$PORT
+web: python PriviaSecStaj/manage.py runserver 0.0.0.0:$PORT
